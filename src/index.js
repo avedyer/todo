@@ -4,7 +4,6 @@ import Note from './modules/note.js'
 import TodoList from './modules/todoList.js';
 import NoteList from './modules/noteList.js';
 import writeId from './modules/helpers.js'
-import noteList from './modules/noteList.js';
 
 
 const body = document.querySelector('body');
@@ -21,6 +20,21 @@ testProject.tasks.push(testTask);
 NoteList.add(testNote);
 
 TodoList.addProject(testProject);
+
+if(!localStorage.getItem('todoList')){
+    populateStorage();
+}
+
+else{
+    TodoList.projects = JSON.parse(localStorage.getItem('todoList'));
+    NoteList.notes = JSON.parse(localStorage.getItem('noteList'));
+}
+
+function populateStorage(){
+    console.log("populating...")
+    localStorage.setItem('todoList', JSON.stringify(TodoList.projects));
+    localStorage.setItem('noteList', JSON.stringify(NoteList.notes));
+}
 
 window.TodoList = TodoList
 window.testTask = testTask

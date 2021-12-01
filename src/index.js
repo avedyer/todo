@@ -1,76 +1,29 @@
+import Task from './modules/task.js';
+import Project from './modules/project.js';
+import Note from './modules/note.js'
+import TodoList from './modules/todoList.js';
+import NoteList from './modules/noteList.js';
+import writeId from './modules/helpers.js'
+import noteList from './modules/noteList.js';
+
+
 const body = document.querySelector('body');
 body.innerHTML = "testing";
 
-console.log('testing');
+console.log("testing");
 
-const testVar = 42;
+let testTask = new Task('walk dog', 'december 8th 2021', 'low');
+let testNote = new Note('groceries', 'avocado, mango, milk, rice');
+let testProject = new Project('sell house', '06/02/2022');
 
-const Todo = (title, desc, dueDate, priority, tasks) => {
-    
-    return {
-        title,
-        desc, 
-        dueDate,
-        priority,
-        tasks
-    };
-}
+testProject.tasks.push(testTask);
 
-function Project (title, desc, dueDate, priority, todos) {
-    return {
-        title,
-        desc,
-        dueDate,
-        priority,
-        todos
-    };
-}
+NoteList.add(testNote);
 
-const Note = (title, content, date, pinned) => {
+TodoList.addProject(testProject);
 
-    return {
-        title,
-        content,
-        date,
-        pinned
-    };
-}
-
-const domInterface = (() => {
-    return {
-
-    };
-})();
-
-const todoManager = (() => {
-    return {
-
-    };
-})();
-
-const noteManager = (() => {
-
-    return {
-
-    };
-})();
-
-const projectManager = (() => {
-    return {
-
-    };
-})();
-
-const testTodo = Todo('fix garage door', '', 'December 2nd, 2021', 'medium', ['remove door', 'find manual', 'order parts']);
-
-const testProject = Project('fix up house', 'need to sell next year', 'December 31st, 2021', 'high', [testTodo]);
-
-window.domInterface = domInterface
-window.todoManager = todoManager
-window.noteManager = noteManager
-window.projectManager = projectManager
-
-window.testVar = testVar
-
-window.testTodo = testTodo
-window.testProject = testProject
+window.TodoList = TodoList
+window.testTask = testTask
+window.writeId = writeId
+window.NoteList = NoteList
+window.Project = Project

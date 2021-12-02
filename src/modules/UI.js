@@ -43,6 +43,11 @@ export default class UI {
         for (const project of TodoList.projects) {
             const projectEl = document.createElement('li');
             projectEl.innerHTML = project.title;
+
+            projectEl.onclick = () => {
+                this.loadContainer('project', project);
+            }
+            
             projectList.append(projectEl);
         }
 

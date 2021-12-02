@@ -33,6 +33,10 @@ class TodoList {
         }
     }
 
+    removeAll() {
+        this.projects.length = 0;
+    }
+
     getProjectIds() {
         let ids = []
 
@@ -55,6 +59,29 @@ class TodoList {
         return ids
     }
 
+    prioritySort(project) {
+
+        let sortedTasks = []
+        let medIndex = 0
+
+        for (const task of project.tasks) {
+
+            switch (task.priority) {
+                case 'High':
+                    sortedTasks.unshift(task);
+                    ++medIndex; 
+                    break
+                case 'Medium':
+                    sortedTasks.splice(medIndex, 0, task);
+                    break
+                case 'Low':
+                    sortedTasks.push(task);
+                    break
+            }
+        }
+
+        project.tasks.splice(0, sortedTasks.length, ...sortedTasks);
+    }
 }
 
 export default new TodoList()

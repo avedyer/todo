@@ -20,6 +20,10 @@ class NoteList {
         }
     }
 
+    removeAll() {
+        this.notes.length = 0;
+    }
+
     getIds() {
         let ids = []
 

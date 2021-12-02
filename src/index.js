@@ -30,7 +30,9 @@ window.testNote = testNote
 window.writeId = writeId
 window.NoteList = NoteList
 window.Project = Project
+window.Task = Task
 window.Note = Note
+window.populateStorage = populateStorage
 
 // INITIATE LOCAL STORAGE
 

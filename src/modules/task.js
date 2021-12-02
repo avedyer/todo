@@ -8,8 +8,4 @@ export default class Task {
         this.dueDate = dueDate;
         this.priority = priority;
     }
-
-    testMethod () {
-        return 62
-    }
 }

@@ -4,18 +4,21 @@ import Note from './modules/note.js'
 import TodoList from './modules/todoList.js';
 import NoteList from './modules/noteList.js';
 import {writeId, populateStorage} from './modules/helpers.js';
+import UI from './modules/UI.js';
+
+import './styles.css';
+
 
 
 // TESTING - FOR LATER REMOVAL
-
-const body = document.querySelector('body');
-body.innerHTML = "testing";
 
 console.log("testing");
 
 let testTask = new Task('walk dog', 'December 8 2021', 'low');
 let testNote = new Note('groceries', 'avocado, mango, milk, rice');
 let testProject = new Project('sell house');
+
+//UI.testBody()
 
 /*
 
@@ -40,6 +43,7 @@ else{
     NoteList.notes = JSON.parse(localStorage.getItem('noteList'));
 }
 
+UI.loadUI();
 
 // MAPPING WINDOW VARS TO SCRIPT VARS
 
@@ -52,3 +56,4 @@ window.Project = Project
 window.Task = Task
 window.Note = Note
 window.populateStorage = populateStorage
+window.UI = UI

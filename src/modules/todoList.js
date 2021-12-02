@@ -1,4 +1,5 @@
 import Project  from "./project";
+import {populateStorage} from './helpers.js';
 
 class TodoList {
     constructor () {
@@ -11,6 +12,25 @@ class TodoList {
 
     addProject(project) {
         this.projects.push(project);
+        populateStorage('todoList', this.projects);
+    }
+
+    removeProject(project) {
+        for (let i=0; i<this.projects.length; ++i) {
+            if (project.id === this.projects[i].id) {
+                this.projects.splice(i, 1);
+            }
+        }
+    }
+
+    removeTask(task) {
+        for (let project of this.projects) {
+            for (let i=0; i<project.tasks.length; ++i) {
+                if (task.id === project.tasks[i].id) {
+                    project.tasks.splice(i, 1);
+                }
+            }
+        }
     }
 
     getProjectIds() {
@@ -34,6 +54,7 @@ class TodoList {
 
         return ids
     }
+
 }
 
 export default new TodoList()

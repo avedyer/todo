@@ -48,6 +48,12 @@ class NoteList {
 
         this.notes.splice(0, sortedNotes.length, ...sortedNotes);
     }
+
+    dateSort () {
+        this.notes.sort(function(a, b) {
+            return new Date(b.date) - new Date(a.date);
+        });
+    }
 }
 
 export default new NoteList()

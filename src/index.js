@@ -13,18 +13,19 @@ body.innerHTML = "testing";
 
 console.log("testing");
 
-
 let testTask = new Task('walk dog', 'December 8 2021', 'low');
 let testNote = new Note('groceries', 'avocado, mango, milk, rice');
 let testProject = new Project('sell house');
 
-
 /*
+
 testProject.tasks.push(testTask);
 NoteList.add(testNote);
 TodoList.addProject(testProject);
-*/
+NoteList.add(new Note('me mow', "he's very small but big evil"));
+NoteList.add(new Note('movies', 'Death of Stalin, Interstellar, Alien'))
 
+*/
 
 // INITIATE LOCAL STORAGE
 
@@ -40,7 +41,7 @@ else{
 }
 
 
-//MAPPING WINDOW VARS TO SCRIPT VARS
+// MAPPING WINDOW VARS TO SCRIPT VARS
 
 window.TodoList = TodoList
 window.testTask = testTask

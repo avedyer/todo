@@ -82,6 +82,12 @@ class TodoList {
 
         project.tasks.splice(0, sortedTasks.length, ...sortedTasks);
     }
+
+    dateSort(project) {
+        project.tasks.sort(function(a, b) {
+            return new Date(a.dueDate) - new Date(b.dueDate)
+        });
+    }
 }
 
 export default new TodoList()

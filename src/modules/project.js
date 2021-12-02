@@ -5,7 +5,6 @@ export default class Project {
     constructor (title, dueDate) {
         this.id = writeId(TodoList.getProjectIds());
         this. title = title;
-        this.dueDate = dueDate;
         this.tasks = [];
     }
 }

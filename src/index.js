@@ -13,9 +13,11 @@ body.innerHTML = "testing";
 
 console.log("testing");
 
-let testTask = new Task('walk dog', 'december 8th 2021', 'low');
+
+let testTask = new Task('walk dog', 'December 8 2021', 'low');
 let testNote = new Note('groceries', 'avocado, mango, milk, rice');
-let testProject = new Project('sell house', '06/02/2022');
+let testProject = new Project('sell house');
+
 
 /*
 testProject.tasks.push(testTask);
@@ -23,16 +25,6 @@ NoteList.add(testNote);
 TodoList.addProject(testProject);
 */
 
-
-window.TodoList = TodoList
-window.testTask = testTask
-window.testNote = testNote
-window.writeId = writeId
-window.NoteList = NoteList
-window.Project = Project
-window.Task = Task
-window.Note = Note
-window.populateStorage = populateStorage
 
 // INITIATE LOCAL STORAGE
 
@@ -46,3 +38,16 @@ else{
     TodoList.projects = JSON.parse(localStorage.getItem('todoList'));
     NoteList.notes = JSON.parse(localStorage.getItem('noteList'));
 }
+
+
+//MAPPING WINDOW VARS TO SCRIPT VARS
+
+window.TodoList = TodoList
+window.testTask = testTask
+window.testNote = testNote
+window.writeId = writeId
+window.NoteList = NoteList
+window.Project = Project
+window.Task = Task
+window.Note = Note
+window.populateStorage = populateStorage

@@ -4,6 +4,7 @@ import Note from './note.js'
 import TodoList from './todoList.js';
 import NoteList from './noteList.js';
 import {populateStorage} from './helpers.js';
+import todoList from './todoList.js';
 
 export default class UI {
 
@@ -104,7 +105,7 @@ export default class UI {
         const newTaskButton = document.createElement('button');
         newTaskButton.innerHTML = '+'
 
-        newTaskButton.onclick = () => {projectContainer.append(this.loadTaskForm())};
+        newTaskButton.onclick = () => {projectContainer.append(this.loadTaskForm(project))};
 
         projectContainer.append(projectHeader, taskList, newTaskButton);
 
@@ -172,12 +173,11 @@ export default class UI {
         // TODO note pop out
     }
 
-    static loadTaskForm () {
+    static loadTaskForm (project) {
 
         const taskForm = document.createElement('form');
         taskForm.setAttribute('onsubmit', 'return false');
         taskForm.classList.add('taskForm');
-        taskForm.onsubmit = () => {this.deleteElement(taskForm)};
 
         const titleInput = document.createElement('input')
         titleInput.setAttribute('type', 'text');
@@ -217,6 +217,15 @@ export default class UI {
         cancelButton.innerHTML = 'Cancel';
 
         taskForm.append(submitButton, cancelButton);
+
+        taskForm.onsubmit = () => {
+            
+            const newTask = new Task(titleInput.value, dateInput.value, document.querySelector('input[name="priority"]:checked').value);
+            TodoList.addTask(project, newTask);
+
+            this.deleteElement(taskForm)
+            this.loadContainer('project', project);
+        };
 
         return taskForm
     }

@@ -15,6 +15,11 @@ class TodoList {
         populateStorage('todoList', this.projects);
     }
 
+    addTask(project, task) {
+        project.tasks.push(task);
+        populateStorage('todoList', this.projects);
+    }
+
     removeProject(project) {
         for (let i=0; i<this.projects.length; ++i) {
             if (project.id === this.projects[i].id) {

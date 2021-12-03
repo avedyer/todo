@@ -7,7 +7,6 @@ class NoteList {
     }
 
     add(note) {
-        console.log(this.notes);
         this.notes.push(note);
         populateStorage('noteList', this.notes);
     }

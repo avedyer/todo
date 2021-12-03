@@ -6,7 +6,7 @@ export default class Note {
         this.id = writeId(NoteList.getIds());
         this.title = title;
         this.content = content;
-        this.date = new Date()
+        this.date = Date();
         this.pinned = false;
     }
 }

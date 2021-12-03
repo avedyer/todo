@@ -97,9 +97,8 @@ export default class UI {
         taskList.classList.add('taskList')
 
         for (const task of project.tasks) {
-            const taskEl = document.createElement('li')
-            taskEl.innerHTML = task.title;
-            taskList.append(taskEl);
+            
+            taskList.append(this.loadTask(task));
         }
 
         projectContainer.append(projectHeader, taskList);
@@ -133,6 +132,27 @@ export default class UI {
         }
 
         return noteContainer
+    }
+
+    static loadTask (task) {
+        const taskEl = document.createElement('li');
+        taskEl.classList.add('task');
+
+        const checkEl = document.createElement('input');
+        checkEl.setAttribute('type', 'checkbox');
+
+        const titleEl = document.createElement('span');
+        titleEl.innerHTML = task.title;
+
+        const dateEl = document.createElement('span');
+        dateEl.innerHTML = task.dueDate;
+
+        const delEl = document.createElement('button');
+        delEl. innerHTML = 'Delete'
+
+        taskEl.append(checkEl, titleEl, dateEl, delEl);
+
+        return taskEl
     }
 
     static focusNote() {

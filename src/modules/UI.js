@@ -101,7 +101,12 @@ export default class UI {
             taskList.append(this.loadTask(task));
         }
 
-        projectContainer.append(projectHeader, taskList);
+        const newTaskButton = document.createElement('button');
+        newTaskButton.innerHTML = '+'
+
+        newTaskButton.onclick = () => {projectContainer.append(this.loadTaskForm())};
+
+        projectContainer.append(projectHeader, taskList, newTaskButton);
 
         return projectContainer
     }
@@ -131,6 +136,11 @@ export default class UI {
             noteContainer.append(noteEl);
         }
 
+        const newNoteButton = document.createElement('button');
+        newNoteButton.innerHTML = '+'
+
+        noteContainer.append(newNoteButton);
+
         return noteContainer
     }
 
@@ -147,15 +157,65 @@ export default class UI {
         const dateEl = document.createElement('span');
         dateEl.innerHTML = task.dueDate;
 
+        const editEl = document.createElement('button');
+        editEl.innerHTML = 'Edit';
+
         const delEl = document.createElement('button');
         delEl. innerHTML = 'Delete'
 
-        taskEl.append(checkEl, titleEl, dateEl, delEl);
+        taskEl.append(checkEl, titleEl, dateEl, editEl, delEl);
 
         return taskEl
     }
 
     static focusNote() {
         // TODO note pop out
+    }
+
+    static loadTaskForm () {
+
+        
+
+        const taskForm = document.createElement('form');
+
+        const titleInput = document.createElement('input')
+        titleInput.setAttribute('type', 'text');
+        titleInput.setAttribute('placeholder', 'Title');
+
+        const dateLabel = document.createElement('label');
+        dateLabel.setAttribute('for', 'dueDate');
+        dateLabel.innerHTML = 'Due Date'
+
+        const dateInput = document.createElement('input');
+        dateInput.setAttribute('type', 'date');
+        dateInput.setAttribute('name', 'dueDate');
+
+        taskForm.append(titleInput, dateLabel, dateInput);
+
+        const priorityVals = ['Low', 'Medium', 'High'];
+
+        for (let i=0; i<priorityVals.length; ++i) {
+
+            const priorityLabel = document.createElement('label');
+            priorityLabel.setAttribute('for', priorityVals[i]);
+            priorityLabel.innerHTML = priorityVals[i]
+
+            const priorityOpt = document.createElement('input');
+            priorityOpt.setAttribute('type', 'radio');
+            priorityOpt.name = 'priority';
+            priorityOpt.value = priorityVals[i]
+
+            taskForm.append(priorityOpt, priorityLabel);
+        }
+
+        const submitButton = document.createElement('button');
+        submitButton.innerHTML = 'Submit';
+
+        const cancelButton = document.createElement('button');
+        cancelButton.innerHTML = 'Cancel';
+
+        taskForm.append(submitButton, cancelButton);
+
+        return taskForm
     }
 }

@@ -176,25 +176,27 @@ export default class UI {
     static loadTaskForm (project) {
 
         const taskForm = document.createElement('form');
-        taskForm.setAttribute('onsubmit', 'return false');
-        taskForm.classList.add('taskForm');
+            taskForm.setAttribute('onsubmit', 'return false');
+            taskForm.classList.add('taskForm');
 
         const titleInput = document.createElement('input')
-        titleInput.setAttribute('type', 'text');
-        titleInput.setAttribute('placeholder', 'Title');
-        titleInput.setAttribute('required', true);
+            titleInput.setAttribute('type', 'text');
+            titleInput.setAttribute('placeholder', 'Title');
+            titleInput.setAttribute('required', true);
 
         const dateLabel = document.createElement('label');
-        dateLabel.setAttribute('for', 'dueDate');
-        dateLabel.innerHTML = 'Due Date'
+            dateLabel.setAttribute('for', 'dueDate');
+            dateLabel.innerHTML = 'Due Date'
 
         const dateInput = document.createElement('input');
-        dateInput.setAttribute('type', 'date');
-        dateInput.setAttribute('name', 'dueDate');
+            dateInput.setAttribute('type', 'date');
+            dateInput.setAttribute('name', 'dueDate');
 
         taskForm.append(titleInput, dateLabel, dateInput);
 
         const priorityVals = ['Low', 'Medium', 'High'];
+
+        const prioritySelector = document.createElement('div');
 
         for (let i=0; i<priorityVals.length; ++i) {
 
@@ -207,23 +209,22 @@ export default class UI {
             priorityOpt.name = 'priority';
             priorityOpt.value = priorityVals[i]
 
-            taskForm.append(priorityOpt, priorityLabel);
+            prioritySelector.append(priorityOpt, priorityLabel);
         }
 
         const submitButton = document.createElement('button');
-        submitButton.innerHTML = 'Submit';
+            submitButton.innerHTML = 'Submit';
 
         const cancelButton = document.createElement('button');
-        cancelButton.innerHTML = 'Cancel';
+            cancelButton.innerHTML = 'Cancel';
+            cancelButton.onclick = () => {this.deleteElement(taskForm)};
 
-        taskForm.append(submitButton, cancelButton);
+        taskForm.append(titleInput, dateLabel, dateInput, prioritySelector, submitButton, cancelButton);
 
         taskForm.onsubmit = () => {
             
             const newTask = new Task(titleInput.value, dateInput.value, document.querySelector('input[name="priority"]:checked').value);
             TodoList.addTask(project, newTask);
-
-            this.deleteElement(taskForm)
             this.loadContainer('project', project);
         };
 

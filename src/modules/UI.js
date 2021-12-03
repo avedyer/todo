@@ -174,13 +174,15 @@ export default class UI {
 
     static loadTaskForm () {
 
-        
-
         const taskForm = document.createElement('form');
+        taskForm.setAttribute('onsubmit', 'return false');
+        taskForm.classList.add('taskForm');
+        taskForm.onsubmit = () => {this.deleteElement(taskForm)};
 
         const titleInput = document.createElement('input')
         titleInput.setAttribute('type', 'text');
         titleInput.setAttribute('placeholder', 'Title');
+        titleInput.setAttribute('required', true);
 
         const dateLabel = document.createElement('label');
         dateLabel.setAttribute('for', 'dueDate');
@@ -217,5 +219,9 @@ export default class UI {
         taskForm.append(submitButton, cancelButton);
 
         return taskForm
+    }
+
+    static deleteElement(element) {
+        element.parentElement.removeChild(element);
     }
 }

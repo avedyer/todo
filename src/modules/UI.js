@@ -8,6 +8,10 @@ import todoList from './todoList.js';
 
 export default class UI {
 
+    constructor() {
+        this.currentProject = todoList.projects[0];
+    }
+
     static body = document.querySelector('body')
 
     static testBody() {
@@ -88,7 +92,11 @@ export default class UI {
 
     static loadProject (project) {
         // TODO - Load in todo items
-        const projectContainer = document.createElement('div');
+        if (!project) {
+            let project = this.currentProject;
+        }
+
+        let projectContainer = document.createElement('div');
         projectContainer.classList.add('projectContainer');
 
         const projectHeader = document.createElement('h2');
@@ -108,6 +116,8 @@ export default class UI {
         newTaskButton.onclick = () => {projectContainer.append(this.loadTaskForm(project))};
 
         projectContainer.append(projectHeader, taskList, newTaskButton);
+
+        this.currentProject = project;
 
         return projectContainer
     }
@@ -163,6 +173,10 @@ export default class UI {
 
         const delEl = document.createElement('button');
         delEl. innerHTML = 'Delete'
+        delEl.onclick = () => {
+            todoList.removeTask(task);
+            this.loadContainer('project', this.currentProject);
+        }
 
         taskEl.append(checkEl, titleEl, dateEl, editEl, delEl);
 

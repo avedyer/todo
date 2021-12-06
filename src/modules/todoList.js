@@ -28,11 +28,25 @@ class TodoList {
         }
     }
 
-    removeTask(task) {
-        for (let project of this.projects) {
+    removeTask(task, project) {
+
+        if (!project){
+            for (let project of this.projects) {
+                for (let i=0; i<project.tasks.length; ++i) {
+                    if (task.id === project.tasks[i].id) {
+                        project.tasks.splice(i, 1);
+                        populateStorage('todoList', this.projects);
+                        return
+                    }
+                }
+            }
+        }
+        else {
             for (let i=0; i<project.tasks.length; ++i) {
                 if (task.id === project.tasks[i].id) {
                     project.tasks.splice(i, 1);
+                    populateStorage('todoList', this.projects);
+                    return
                 }
             }
         }

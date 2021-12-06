@@ -24,8 +24,16 @@ export default class UI {
 
     static loadSidebar() {
         // TODO nav sidebar with project list
-        const sidebar = document.createElement('div');
-        sidebar.classList.add('sidebar');
+        let sidebar = document.querySelector('.sidebar')
+
+        if (!sidebar) {
+            sidebar = document.createElement('div');
+            sidebar.classList.add('sidebar');
+        }
+
+        else {
+            sidebar.innerHTML = ''
+        }
 
         const noteTab = document.createElement('div');
         noteTab.classList.add('tab');
@@ -47,16 +55,34 @@ export default class UI {
 
         for (const project of TodoList.projects) {
             const projectEl = document.createElement('li');
-            projectEl.innerHTML = project.title;
+            
+            const projectTitle = document.createElement('span');
+            projectTitle.innerHTML = project.title;
 
-            projectEl.onclick = () => {
+            projectTitle.onclick = () => {
                 this.loadContainer('project', project);
             }
+
+            const delEl = document.createElement('button');
+            delEl. innerHTML = 'Delete'
+            delEl.onclick = () => {
+                TodoList.removeProject(project);
+                this.loadSidebar();
+            }
+
+            projectEl.append(projectTitle, delEl);
             
             projectList.append(projectEl);
         }
 
-        sidebar.append(noteTab, projectTab, projectList);
+        const addProjectButton = document.createElement('button');
+        addProjectButton.innerHTML = '+';
+        addProjectButton.onclick = () => {
+            sidebar.append(this.loadProjectForm());
+            
+        } 
+
+        sidebar.append(noteTab, projectTab, projectList, addProjectButton);
 
         return sidebar
     }
@@ -65,7 +91,6 @@ export default class UI {
         // TODO - Container for task/note lists
 
         let listContainer = document.querySelector('.listContainer');
-        console.log(!listContainer);
 
         if (!listContainer) {
             listContainer = document.createElement('div');
@@ -243,6 +268,36 @@ export default class UI {
         };
 
         return taskForm
+    }
+
+    static loadProjectForm() {
+
+        const projectForm = document.createElement('form');
+            projectForm.setAttribute('onsubmit', 'return false');
+
+        const titleInput = document.createElement('input');
+            titleInput.setAttribute('type', 'text');
+
+        const submitButton = document.createElement('button');
+            submitButton.innerHTML = 'Submit';
+
+        const cancelButton = document.createElement('button');
+            cancelButton.innerHTML = 'Cancel';
+            cancelButton.onclick = () => {this.deleteElement(projectForm)};
+
+        projectForm.append(titleInput, submitButton, cancelButton);
+
+        projectForm.onsubmit = () => {
+
+            const newProject = new Project(titleInput.value);
+            TodoList.addProject(newProject);
+            this.loadSidebar();
+            this.loadContainer('project', newProject);
+
+            return false
+        }
+
+        return projectForm
     }
 
     static deleteElement(element) {

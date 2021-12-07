@@ -21,10 +21,9 @@ class TodoList {
     }
 
     removeProject(project) {
-        console.log("searching")
+
         for (let i=0; i<=this.projects.length; ++i) {
-            console.log(i);
-            console.log(this.projects[i].id, project.id);
+            
             if (project.id === this.projects[i].id) {
                 this.projects.splice(i, 1);
                 populateStorage('todoList', this.projects);

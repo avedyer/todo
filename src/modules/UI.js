@@ -107,7 +107,7 @@ export default class UI {
                     listContainer.append(this.loadProject(list));
                     break
                 case 'note':
-                    listContainer.append(this.loadNoteList(list))
+                    listContainer.append(this.loadNoteList(NoteList.notes));
             }
 
         }
@@ -167,13 +167,26 @@ export default class UI {
             noteContent.classList.add('noteContent');
             noteContent.innerHTML = note.content;
 
-            noteEl.append(noteTitle, noteContent);
+            const editEl = document.createElement('button');
+                editEl.innerHTML = 'Edit';
+                editEl.onclick = () => {
+                    // TODO note editing function
+                }
+
+            const delEl = document.createElement('button');
+                delEl. innerHTML = 'Delete'
+                delEl.onclick = () => {
+                // TODO note delete function
+            }
+
+            noteEl.append(noteTitle, noteContent, editEl, delEl);
 
             noteContainer.append(noteEl);
         }
 
         const newNoteButton = document.createElement('button');
-        newNoteButton.innerHTML = '+'
+            newNoteButton.innerHTML = '+'
+            newNoteButton.onclick = () => {noteContainer.append(this.loadNoteForm())};
 
         noteContainer.append(newNoteButton);
 
@@ -298,6 +311,36 @@ export default class UI {
         }
 
         return projectForm
+    }
+
+    static loadNoteForm () {
+        
+        const noteForm = document.createElement('form');
+            noteForm.setAttribute('onsubmit', 'return false');
+
+        const titleInput = document.createElement('input');
+            titleInput.setAttribute('type', 'text');
+
+        const contentInput = document.createElement('textarea');
+            contentInput.setAttribute('rows', '8');
+            contentInput.setAttribute('cols', '32');  
+
+        const submitButton = document.createElement('button');
+            submitButton.innerHTML = 'Submit';
+
+        const cancelButton = document.createElement('button');
+            cancelButton.innerHTML = 'Cancel';
+            cancelButton.onclick = () => {this.deleteElement(noteForm)};
+        
+        noteForm.append(titleInput, contentInput, submitButton, cancelButton);
+
+        noteForm.onsubmit = () => {
+            const newNote = new Note (titleInput.value, contentInput.value);
+            NoteList.add(newNote);
+            this.loadContainer('note');
+        }
+
+        return noteForm
     }
 
     static deleteElement(element) {

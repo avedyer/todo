@@ -170,8 +170,20 @@ export default class UI {
         }
 
         for (const note of NoteList.notes) {
+            noteContainer.append(this.loadNote(note));
+        }
 
-            const noteEl = document.createElement('div');
+        const newNoteButton = document.createElement('button');
+            newNoteButton.innerHTML = '+'
+            newNoteButton.onclick = () => {noteContainer.append(this.loadNoteForm())};
+
+        noteContainer.append(newNoteButton);
+
+        return noteContainer
+    }
+
+    static loadNote (note) {
+        const noteEl = document.createElement('div');
             noteEl.classList.add('note');
 
             const noteTitle = document.createElement('h3');
@@ -185,7 +197,7 @@ export default class UI {
             const editEl = document.createElement('button');
                 editEl.innerHTML = 'Edit';
                 editEl.onclick = () => {
-                    // TODO note editing function
+                    noteEl.parentElement.replaceChild(this.loadNoteForm(note), noteEl);
                 }
 
             const delEl = document.createElement('button');
@@ -197,16 +209,7 @@ export default class UI {
 
             noteEl.append(noteTitle, noteContent, editEl, delEl);
 
-            noteContainer.append(noteEl);
-        }
-
-        const newNoteButton = document.createElement('button');
-            newNoteButton.innerHTML = '+'
-            newNoteButton.onclick = () => {noteContainer.append(this.loadNoteForm())};
-
-        noteContainer.append(newNoteButton);
-
-        return noteContainer
+            return noteEl
     }
 
     static loadTask (task) {
@@ -229,7 +232,6 @@ export default class UI {
         const editEl = document.createElement('button');
             editEl.innerHTML = 'Edit';
             editEl.onclick = () => {
-                taskEl.innerHTML = '';
                 taskEl.parentElement.replaceChild(this.loadTaskForm(this.currentProject, task), taskEl);
                 
             }
@@ -395,12 +397,27 @@ export default class UI {
         const cancelButton = document.createElement('button');
             cancelButton.innerHTML = 'Cancel';
             cancelButton.onclick = () => {this.deleteElement(noteForm)};
+
+        if (note) {
+            titleInput.value = note.title;
+            contentInput.value = note.content;
+        }
         
         noteForm.append(titleInput, contentInput, submitButton, cancelButton);
 
         noteForm.onsubmit = () => {
-            const newNote = new Note (titleInput.value, contentInput.value);
-            NoteList.add(newNote);
+            let newNote = new Note (titleInput.value, contentInput.value);
+
+            if (note) {
+                newNote.id = note.id;
+                newNote.pinned = note.pinned;
+
+                NoteList.replace(newNote, note);
+            }
+            
+            else {
+                NoteList.add(newNote);
+            }
             this.loadContainer('note');
         }
 

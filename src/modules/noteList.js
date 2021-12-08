@@ -15,9 +15,20 @@ class NoteList {
         for (let i=0; i<this.notes.length; ++i) {
             if (note.id === this.notes[i].id) {
                 this.notes.splice(i, 1);
+                populateStorage('noteList', this.notes);
+                return
             }
         }
-        populateStorage('noteList', this.notes);
+    }
+
+    replace (newNote, oldNote) {
+        for (let i=0; i<this.notes.length; ++i) {
+            if (oldNote.id === this.notes[i].id) {
+                this.notes[i] = newNote;
+                populateStorage('noteList', this.notes);
+                return
+            }
+        }
     }
 
     removeAll() {

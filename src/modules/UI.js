@@ -9,22 +9,19 @@ import dateFormat, { masks } from "dateformat";
 
 export default class UI {
 
-    constructor() {
-        this.currentProject = todoList.projects[0];
-    }
-
+    static currentProject = todoList.projects[0];
     static body = document.querySelector('body')
 
-    static testBody() {
-        this.body.innerHTML = "testing UI"
-    }
+    // Initial Loadout
 
     static loadUI () {
         this.body.append(this.loadSidebar(), this.loadContainer('project', TodoList.projects[0]));
     }
 
+
+    // Navigation bar for switching between projects and notes
+
     static loadSidebar() {
-        // TODO nav sidebar with project list
         let sidebar = document.querySelector('.sidebar')
 
         if (!sidebar) {
@@ -37,16 +34,16 @@ export default class UI {
         }
 
         const noteTab = document.createElement('div');
-        noteTab.classList.add('tab');
-        noteTab.innerHTML = "Notes"
+            noteTab.classList.add('tab');
+            noteTab.innerHTML = "Notes"
 
         noteTab.onclick = () => {
             this.loadContainer('note', NoteList.notes);
         }
 
         const projectTab = document.createElement('div');
-        projectTab.classList.add('tab');
-        projectTab.innerHTML = "Projects";
+            projectTab.classList.add('tab');
+            projectTab.innerHTML = "Projects";
 
         projectTab.onclick = () => {
             this.loadContainer('project', TodoList.projects[0])
@@ -54,15 +51,16 @@ export default class UI {
 
         const projectList = document.createElement('ul');
 
+        // List project names for view selection
+
         for (const project of TodoList.projects) {
             const projectEl = document.createElement('li');
             
             const projectTitle = document.createElement('span');
-            projectTitle.innerHTML = project.title;
-
-            projectTitle.onclick = () => {
-                this.loadContainer('project', project);
-            }
+                projectTitle.innerHTML = project.title;
+                projectTitle.onclick = () => {
+                    this.loadContainer('project', project);
+                }
 
             const editEl = document.createElement('button');
                 editEl.innerHTML = 'edit';
@@ -71,11 +69,11 @@ export default class UI {
                 }
 
             const delEl = document.createElement('button');
-            delEl. innerHTML = 'Delete'
-            delEl.onclick = () => {
-                TodoList.removeProject(project);
-                this.loadSidebar();
-            }
+                delEl. innerHTML = 'Delete'
+                delEl.onclick = () => {
+                    TodoList.removeProject(project);
+                    this.loadSidebar();
+                }
 
             projectEl.append(projectTitle, editEl, delEl);
             
@@ -95,14 +93,14 @@ export default class UI {
     }
 
     static loadContainer(type, list) {
-        // TODO - Container for task/note lists
+
+        // Load generic container for projects or lists, load in content based on arguments
 
         let listContainer = document.querySelector('.listContainer');
 
         if (!listContainer) {
             listContainer = document.createElement('div');
             listContainer.classList.add('listContainer');
-
             listContainer.append(this.loadProject(list));
         }
 
@@ -123,7 +121,9 @@ export default class UI {
     }
 
     static loadProject (project) {
-        // TODO - Load in todo items
+
+        // Load project container with editing, deleting, sorting functionality
+
         if (!project) {
             let project = this.currentProject;
         }
@@ -167,9 +167,8 @@ export default class UI {
         }
 
         const newTaskButton = document.createElement('button');
-        newTaskButton.innerHTML = '+'
-
-        newTaskButton.onclick = () => {projectContainer.append(this.loadTaskForm(project))};
+            newTaskButton.innerHTML = '+'
+            newTaskButton.onclick = () => {projectContainer.append(this.loadTaskForm(project))};
 
         projectContainer.append(projectHeader, priorityEl, dateEl, taskList, newTaskButton);
 
@@ -179,18 +178,18 @@ export default class UI {
     }
     
     static loadNoteList() {
-        // TODO - Load in notes
-        // seperate pinned / not pinned
+        
+        // Load container for notes, with seperation between pinned/unpinned notes, and new task button
 
         let noteContainer = document.querySelector('.noteContainer');
 
-        if(noteContainer) {
-            noteContainer.innerHTML = '';
+        if(!noteContainer) {
+            noteContainer = document.createElement('div');
+            noteContainer.classList.add('noteContainer');
         }
 
         else {
-            noteContainer = document.createElement('div');
-            noteContainer.classList.add('noteContainer');
+            noteContainer.innerHTML = '';
         }
 
         const pinnedContainer = document.createElement('div');
@@ -213,6 +212,9 @@ export default class UI {
     }
 
     static loadNote (note) {
+
+        // Load individual note with editing functionality
+
         const noteEl = document.createElement('div');
             noteEl.classList.add('note');
 
@@ -245,14 +247,17 @@ export default class UI {
                     this.loadNoteList();
             }
 
-            noteEl.append(noteTitle, pinEl, noteContent, editEl, delEl);
+        noteEl.append(noteTitle, pinEl, noteContent, editEl, delEl);
 
-            return noteEl
+        return noteEl
     }
 
     static loadTask (task) {
+
+        // Load individual task, with editing functionality
+
         const taskEl = document.createElement('li');
-        taskEl.classList.add('task');
+            taskEl.classList.add('task');
 
         const checkEl = document.createElement('input');
             if (task.complete) {
@@ -278,22 +283,21 @@ export default class UI {
             }
 
         const delEl = document.createElement('button');
-        delEl. innerHTML = 'Delete'
-        delEl.onclick = () => {
-            todoList.removeTask(task);
-            this.loadContainer('project', this.currentProject);
-        }
+            delEl. innerHTML = 'Delete'
+            delEl.onclick = () => {
+                todoList.removeTask(task);
+                this.loadContainer('project', this.currentProject);
+            }
 
         taskEl.append(checkEl, titleEl, dateEl, priorityEl, editEl, delEl);
 
         return taskEl
     }
 
-    static focusNote() {
-        // TODO note pop out
-    }
-
     static loadTaskForm (project, task) {
+
+        // Load form for new tasks.
+        // Can be used for editing or creation from scratch. Checks for exisitng task argument to determine output.
 
         const taskForm = document.createElement('form');
             taskForm.setAttribute('onsubmit', 'return false');
@@ -319,9 +323,10 @@ export default class UI {
 
         taskForm.append(titleInput, dateLabel, dateInput);
 
-        const priorityVals = ['Low', 'Medium', 'High'];
+        // Iterative creation of radio button selectors for priority. Defaults to medium, or preexisting task value.
 
         const prioritySelector = document.createElement('div');
+        const priorityVals = ['Low', 'Medium', 'High'];
 
         for (let i=0; i<priorityVals.length; ++i) {
 
@@ -379,6 +384,9 @@ export default class UI {
 
     static loadProjectForm(project) {
 
+        // Load form for new project.
+        // Can be used for editing or creation from scratch. Checks for exisitng project argument to determine output.
+
         const projectForm = document.createElement('form');
             projectForm.setAttribute('onsubmit', 'return false');
 
@@ -421,6 +429,9 @@ export default class UI {
     }
 
     static loadNoteForm (note) {
+
+        // Load form for new note.
+        // Can be used for editing or creation from scratch. Checks for exisitng note argument to determine output.
         
         const noteForm = document.createElement('form');
             noteForm.setAttribute('onsubmit', 'return false');
@@ -459,10 +470,15 @@ export default class UI {
             else {
                 NoteList.add(newNote);
             }
+            
             this.loadContainer('note');
         }
 
         return noteForm
+    }
+
+    static focusNote() {
+        // TODO note pop out
     }
 
     static deleteElement(element) {

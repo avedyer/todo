@@ -82,12 +82,11 @@ export default class UI {
 
         const addProjectButton = document.createElement('button');
             addProjectButton.innerHTML = '+';
-            addProjectButton.onclick = () => {
-                sidebar.append(this.loadProjectForm());
-                
-            } 
+            addProjectButton.onclick = () => {projectList.append(this.loadProjectForm());}
+            
+        projectList.append(addProjectButton);    
 
-        sidebar.append(noteTab, projectTab, projectList, addProjectButton);
+        sidebar.append(noteTab, projectTab, projectList);
 
         return sidebar
     }
@@ -299,9 +298,17 @@ export default class UI {
         // Load form for new tasks.
         // Can be used for editing or creation from scratch. Checks for exisitng task argument to determine output.
 
-        const taskForm = document.createElement('form');
+        let taskForm = document.querySelector('.taskForm');
+
+        if (taskForm) {
+            return taskForm
+        }
+
+        else {
+            taskForm = document.createElement('form');
             taskForm.setAttribute('onsubmit', 'return false');
             taskForm.classList.add('taskForm');
+        }
 
         const titleInput = document.createElement('input')
             titleInput.setAttribute('type', 'text');
@@ -387,8 +394,17 @@ export default class UI {
         // Load form for new project.
         // Can be used for editing or creation from scratch. Checks for exisitng project argument to determine output.
 
-        const projectForm = document.createElement('form');
+        let projectForm = document.querySelector('.projectForm');
+
+        if (projectForm) {
+            return projectForm
+        }
+
+        else {
+            projectForm = document.createElement('form');
             projectForm.setAttribute('onsubmit', 'return false');
+            projectForm.classList.add('projectForm');
+        }
 
         const titleInput = document.createElement('input');
             titleInput.setAttribute('type', 'text');
@@ -432,9 +448,19 @@ export default class UI {
 
         // Load form for new note.
         // Can be used for editing or creation from scratch. Checks for exisitng note argument to determine output.
-        
-        const noteForm = document.createElement('form');
+
+        let noteForm = document.querySelector('.noteForm');
+
+        if (noteForm) {
+            return noteForm
+        }
+
+        else {
+            noteForm = document.createElement('form');
             noteForm.setAttribute('onsubmit', 'return false');
+            noteForm.classList.add('noteForm');
+        }
+        
 
         const titleInput = document.createElement('input');
             titleInput.setAttribute('type', 'text');

@@ -45,6 +45,11 @@ class NoteList {
         return ids
     }
 
+    togglePin(note) {
+        note.pinned = !note.pinned;
+        populateStorage('noteList', this.notes);
+    }
+
     pinSort() {
         let sortedNotes = []
 

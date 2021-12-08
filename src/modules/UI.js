@@ -169,15 +169,21 @@ export default class UI {
             noteContainer.classList.add('noteContainer');
         }
 
-        for (const note of NoteList.notes) {
-            noteContainer.append(this.loadNote(note));
+        const pinnedContainer = document.createElement('div');
+            pinnedContainer.classList.add('pinned');
+
+        const unpinnedContainer = document.createElement('div');
+            unpinnedContainer.classList.add('unpinned');
+
+        for (let note of NoteList.notes) {
+            note.pinned ? pinnedContainer.append(this.loadNote(note)) : unpinnedContainer.append(this.loadNote(note));
         }
 
         const newNoteButton = document.createElement('button');
             newNoteButton.innerHTML = '+'
             newNoteButton.onclick = () => {noteContainer.append(this.loadNoteForm())};
 
-        noteContainer.append(newNoteButton);
+        noteContainer.append(pinnedContainer, unpinnedContainer, newNoteButton);
 
         return noteContainer
     }
@@ -190,9 +196,17 @@ export default class UI {
             noteTitle.classList.add("noteTitle");
             noteTitle.innerHTML = note.title;
 
+            const pinEl = document.createElement('div');
+                note.pinned ? pinEl.innerHTML = 'unpin' : pinEl.innerHTML = 'pin'
+                pinEl.onclick = () => {
+                    NoteList.togglePin(note);
+                    NoteList.pinSort();
+                    this.loadNoteList();
+                }
+
             const noteContent = document.createElement('p');
-            noteContent.classList.add('noteContent');
-            noteContent.innerHTML = note.content;
+                noteContent.classList.add('noteContent');
+                noteContent.innerHTML = note.content;
 
             const editEl = document.createElement('button');
                 editEl.innerHTML = 'Edit';
@@ -207,7 +221,7 @@ export default class UI {
                     this.loadNoteList();
             }
 
-            noteEl.append(noteTitle, noteContent, editEl, delEl);
+            noteEl.append(noteTitle, pinEl, noteContent, editEl, delEl);
 
             return noteEl
     }

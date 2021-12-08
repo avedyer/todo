@@ -35,21 +35,36 @@ export default class UI {
 
         const noteTab = document.createElement('div');
             noteTab.classList.add('tab');
-            noteTab.innerHTML = "Notes"
+        
+        const noteTabHeader = document.createElement('h3');    
+            noteTabHeader.innerHTML = "Notes"
 
         noteTab.onclick = () => {
             this.loadContainer('note', NoteList.notes);
+            projectList.classList.add('hidden');
+            noteTab.classList.add('selected')
+            projectTab.classList.remove('selected')
         }
+
+        noteTab.append(noteTabHeader);
 
         const projectTab = document.createElement('div');
             projectTab.classList.add('tab');
-            projectTab.innerHTML = "Projects";
+
+        const projectTabHeader = document.createElement('h3');
+            projectTabHeader.innerHTML = "Projects";
+
+        projectTab.append(projectTabHeader); 
 
         projectTab.onclick = () => {
             this.loadContainer('project', TodoList.projects[0])
+            projectList.classList.remove('hidden');
+            projectTab.classList.add('selected');
+            noteTab.classList.remove('selected')
         }
 
         const projectList = document.createElement('ul');
+            projectList.classList.add('projectList', 'hidden');
 
         // List project names for view selection
 
@@ -267,12 +282,15 @@ export default class UI {
 
         const titleEl = document.createElement('span');
             titleEl.innerHTML = task.title;
+            titleEl.classList.add('title')
 
         const dateEl = document.createElement('span');
             dateEl.innerHTML = task.dueDate;
+            dateEl.classList.add('date')
         
         const priorityEl = document.createElement('span')
             priorityEl.innerHTML = task.priority;
+            priorityEl.classList.add('priority')
         
         const editEl = document.createElement('button');
             editEl.innerHTML = 'Edit';

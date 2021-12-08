@@ -128,14 +128,38 @@ export default class UI {
             let project = this.currentProject;
         }
 
-        let projectContainer = document.createElement('div');
-        projectContainer.classList.add('projectContainer');
+        let projectContainer = document.querySelector('.projectContainer');
+        
+        if (!projectContainer) {
+            projectContainer = document.createElement('div');
+            projectContainer.classList.add('projectContainer');
+        }
+
+        else {
+            projectContainer.innerHTML = '';
+        }
 
         const projectHeader = document.createElement('h2');
-        projectHeader.innerHTML = project.title;
+            projectHeader.innerHTML = project.title;
+
+        const priorityEl = document.createElement('h3');
+            priorityEl.innerHTML = 'Priority';
+
+            priorityEl.onclick = () => {
+                TodoList.prioritySort(project);
+                this.loadProject(project);
+            }
+        
+        const dateEl = document.createElement('h3');
+            dateEl.innerHTML = 'Due Date'
+
+            dateEl.onclick = () => {
+                TodoList.dateSort(project);
+                this.loadProject(project);
+            }
 
         const taskList = document.createElement('ul')
-        taskList.classList.add('taskList')
+            taskList.classList.add('taskList')
 
         for (const task of project.tasks) {
             
@@ -147,7 +171,7 @@ export default class UI {
 
         newTaskButton.onclick = () => {projectContainer.append(this.loadTaskForm(project))};
 
-        projectContainer.append(projectHeader, taskList, newTaskButton);
+        projectContainer.append(projectHeader, priorityEl, dateEl, taskList, newTaskButton);
 
         this.currentProject = project;
 
@@ -238,11 +262,14 @@ export default class UI {
             checkEl.onclick = () => {TodoList.toggleCompletion(task)};
 
         const titleEl = document.createElement('span');
-        titleEl.innerHTML = task.title;
+            titleEl.innerHTML = task.title;
 
         const dateEl = document.createElement('span');
-        dateEl.innerHTML = task.dueDate;
-
+            dateEl.innerHTML = task.dueDate;
+        
+        const priorityEl = document.createElement('span')
+            priorityEl.innerHTML = task.priority;
+        
         const editEl = document.createElement('button');
             editEl.innerHTML = 'Edit';
             editEl.onclick = () => {
@@ -257,7 +284,7 @@ export default class UI {
             this.loadContainer('project', this.currentProject);
         }
 
-        taskEl.append(checkEl, titleEl, dateEl, editEl, delEl);
+        taskEl.append(checkEl, titleEl, dateEl, priorityEl, editEl, delEl);
 
         return taskEl
     }

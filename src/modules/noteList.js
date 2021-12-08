@@ -17,6 +17,7 @@ class NoteList {
                 this.notes.splice(i, 1);
             }
         }
+        populateStorage('noteList', this.notes);
     }
 
     removeAll() {

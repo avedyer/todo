@@ -20,6 +20,11 @@ class TodoList {
         populateStorage('todoList', this.projects);
     }
 
+    toggleCompletion(task) {
+        task.complete = !task.complete;
+        populateStorage('todoList', this.projects);
+    }
+
     removeProject(project) {
 
         for (let i=0; i<=this.projects.length; ++i) {
@@ -49,6 +54,29 @@ class TodoList {
             for (let i=0; i<project.tasks.length; ++i) {
                 if (task.id === project.tasks[i].id) {
                     project.tasks.splice(i, 1);
+                    populateStorage('todoList', this.projects);
+                    return
+                }
+            }
+        }
+    }
+
+    replaceTask (newTask, oldTask, project) {
+        if (!project){
+            for (let project of this.projects) {
+                for (let i=0; i<project.tasks.length; ++i) {
+                    if (oldTask.id === project.tasks[i].id) {
+                        project.tasks[i] = newTask;
+                        populateStorage('todoList', this.projects);
+                        return
+                    }
+                }
+            }
+        }
+        else {
+            for (let i=0; i<project.tasks.length; ++i) {
+                if (oldTask.id === project.tasks[i].id) {
+                    project.tasks[i] = newTask;
                     populateStorage('todoList', this.projects);
                     return
                 }

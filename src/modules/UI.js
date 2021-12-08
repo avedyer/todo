@@ -5,6 +5,7 @@ import TodoList from './todoList.js';
 import NoteList from './noteList.js';
 import {populateStorage} from './helpers.js';
 import todoList from './todoList.js';
+import dateFormat, { masks } from "dateformat";
 
 export default class UI {
 
@@ -151,8 +152,16 @@ export default class UI {
         // TODO - Load in notes
         // seperate pinned / not pinned
 
-        const noteContainer = document.createElement('div');
-        noteContainer.classList.add('noteContainer');
+        let noteContainer = document.querySelector('.noteContainer');
+
+        if(noteContainer) {
+            noteContainer.innerHTML = '';
+        }
+
+        else {
+            noteContainer = document.createElement('div');
+            noteContainer.classList.add('noteContainer');
+        }
 
         for (const note of NoteList.notes) {
 
@@ -176,7 +185,8 @@ export default class UI {
             const delEl = document.createElement('button');
                 delEl. innerHTML = 'Delete'
                 delEl.onclick = () => {
-                // TODO note delete function
+                    NoteList.remove(note);
+                    this.loadNoteList();
             }
 
             noteEl.append(noteTitle, noteContent, editEl, delEl);
@@ -198,7 +208,11 @@ export default class UI {
         taskEl.classList.add('task');
 
         const checkEl = document.createElement('input');
-        checkEl.setAttribute('type', 'checkbox');
+            if (task.complete) {
+                checkEl.setAttribute('checked', true);
+            }
+            checkEl.setAttribute('type', 'checkbox');
+            checkEl.onclick = () => {TodoList.toggleCompletion(task)};
 
         const titleEl = document.createElement('span');
         titleEl.innerHTML = task.title;
@@ -207,7 +221,12 @@ export default class UI {
         dateEl.innerHTML = task.dueDate;
 
         const editEl = document.createElement('button');
-        editEl.innerHTML = 'Edit';
+            editEl.innerHTML = 'Edit';
+            editEl.onclick = () => {
+                taskEl.innerHTML = '';
+                taskEl.parentElement.replaceChild(this.loadTaskForm(this.currentProject, task), taskEl);
+                
+            }
 
         const delEl = document.createElement('button');
         delEl. innerHTML = 'Delete'
@@ -225,7 +244,7 @@ export default class UI {
         // TODO note pop out
     }
 
-    static loadTaskForm (project) {
+    static loadTaskForm (project, task) {
 
         const taskForm = document.createElement('form');
             taskForm.setAttribute('onsubmit', 'return false');
@@ -244,6 +263,11 @@ export default class UI {
             dateInput.setAttribute('type', 'date');
             dateInput.setAttribute('name', 'dueDate');
 
+        if (task) {
+            titleInput.value = task.title;
+            dateInput.value = task.dueDate;
+        }
+
         taskForm.append(titleInput, dateLabel, dateInput);
 
         const priorityVals = ['Low', 'Medium', 'High'];
@@ -260,6 +284,13 @@ export default class UI {
             priorityOpt.setAttribute('type', 'radio');
             priorityOpt.name = 'priority';
             priorityOpt.value = priorityVals[i]
+            if (task && task.priority.toLowerCase() === priorityVals[i].toLowerCase()) {
+                priorityOpt.setAttribute('checked', true)
+            }
+
+            else if (!task && i === 1) {
+                priorityOpt.setAttribute('checked', true);
+            }
 
             prioritySelector.append(priorityOpt, priorityLabel);
         }
@@ -269,21 +300,35 @@ export default class UI {
 
         const cancelButton = document.createElement('button');
             cancelButton.innerHTML = 'Cancel';
-            cancelButton.onclick = () => {this.deleteElement(taskForm)};
+            cancelButton.onclick = () => {
+                if (task) {
+                    taskForm.parentElement.replaceChild(this.loadTask(task), taskForm);
+                }
+                else {
+                    this.deleteElement(taskForm)
+                }
+            };
 
         taskForm.append(titleInput, dateLabel, dateInput, prioritySelector, submitButton, cancelButton);
 
-        taskForm.onsubmit = () => {
-            
-            const newTask = new Task(titleInput.value, dateInput.value, document.querySelector('input[name="priority"]:checked').value);
-            TodoList.addTask(project, newTask);
+        taskForm.onsubmit = () => {   
+
+            let newTask = new Task(titleInput.value, dateInput.value, document.querySelector('input[name="priority"]:checked').value);
+
+            if (task) {
+                newTask.id = task.id;
+                TodoList.replaceTask(newTask, task, project);
+            }
+            else {
+                TodoList.addTask(project, newTask);
+            }
             this.loadContainer('project', project);
         };
 
         return taskForm
     }
 
-    static loadProjectForm() {
+    static loadProjectForm(project) {
 
         const projectForm = document.createElement('form');
             projectForm.setAttribute('onsubmit', 'return false');
@@ -313,7 +358,7 @@ export default class UI {
         return projectForm
     }
 
-    static loadNoteForm () {
+    static loadNoteForm (note) {
         
         const noteForm = document.createElement('form');
             noteForm.setAttribute('onsubmit', 'return false');

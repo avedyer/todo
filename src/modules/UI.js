@@ -64,6 +64,12 @@ export default class UI {
                 this.loadContainer('project', project);
             }
 
+            const editEl = document.createElement('button');
+                editEl.innerHTML = 'edit';
+                editEl.onclick = () => {
+                    projectEl.parentElement.replaceChild(this.loadProjectForm(project), projectEl);
+                }
+
             const delEl = document.createElement('button');
             delEl. innerHTML = 'Delete'
             delEl.onclick = () => {
@@ -71,17 +77,17 @@ export default class UI {
                 this.loadSidebar();
             }
 
-            projectEl.append(projectTitle, delEl);
+            projectEl.append(projectTitle, editEl, delEl);
             
             projectList.append(projectEl);
         }
 
         const addProjectButton = document.createElement('button');
-        addProjectButton.innerHTML = '+';
-        addProjectButton.onclick = () => {
-            sidebar.append(this.loadProjectForm());
-            
-        } 
+            addProjectButton.innerHTML = '+';
+            addProjectButton.onclick = () => {
+                sidebar.append(this.loadProjectForm());
+                
+            } 
 
         sidebar.append(noteTab, projectTab, projectList, addProjectButton);
 
@@ -343,12 +349,25 @@ export default class UI {
             cancelButton.innerHTML = 'Cancel';
             cancelButton.onclick = () => {this.deleteElement(projectForm)};
 
+        if (project){
+            titleInput.value = project.title;
+        }
+
         projectForm.append(titleInput, submitButton, cancelButton);
 
         projectForm.onsubmit = () => {
 
-            const newProject = new Project(titleInput.value);
-            TodoList.addProject(newProject);
+            let newProject = new Project(titleInput.value);
+
+            if (project) {
+                newProject.id = project.id;
+                TodoList.replaceProject(newProject, project);
+            }
+
+            else {
+                TodoList.addProject(newProject);
+            }
+
             this.loadSidebar();
             this.loadContainer('project', newProject);
 

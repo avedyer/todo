@@ -84,6 +84,16 @@ class TodoList {
         }
     }
 
+    replaceProject(newProject, oldProject) {
+        for (let i=0; i<=this.projects.length; ++i) {
+            if (oldProject.id === this.projects[i].id) {
+                this.projects[i] = newProject;
+                populateStorage('todoList', this.projects);
+                return
+            }
+        }
+    }
+
     removeAll() {
         this.projects.length = 0;
     }

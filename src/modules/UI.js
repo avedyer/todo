@@ -78,13 +78,13 @@ export default class UI {
                 }
 
             const editEl = document.createElement('button');
-                editEl.innerHTML = 'edit';
+                editEl.innerHTML = '✎';
                 editEl.onclick = () => {
                     projectEl.parentElement.replaceChild(this.loadProjectForm(project), projectEl);
                 }
 
             const delEl = document.createElement('button');
-                delEl. innerHTML = 'Delete'
+                delEl. innerHTML = 'x'
                 delEl.onclick = () => {
                     TodoList.removeProject(project);
                     this.loadSidebar();
@@ -156,24 +156,36 @@ export default class UI {
         const projectHeader = document.createElement('h2');
             projectHeader.innerHTML = project.title;
 
-        const priorityEl = document.createElement('h3');
+        const taskList = document.createElement('table')
+            taskList.classList.add('taskList');
+
+        const priorityEl = document.createElement('td');
             priorityEl.innerHTML = 'Priority';
+            priorityEl.classList.add('priority');
 
             priorityEl.onclick = () => {
                 TodoList.prioritySort(project);
                 this.loadProject(project);
             }
         
-        const dateEl = document.createElement('h3');
+        const dateEl = document.createElement('td');
             dateEl.innerHTML = 'Due Date'
+            dateEl.classList.add('date');
 
             dateEl.onclick = () => {
                 TodoList.dateSort(project);
                 this.loadProject(project);
             }
 
-        const taskList = document.createElement('ul')
-            taskList.classList.add('taskList')
+        const gridFiller = document.createElement('td');
+
+        const listHeader = document.createElement('tr');
+            listHeader.classList.add('task')
+
+        listHeader.append(gridFiller, gridFiller.cloneNode(), dateEl, priorityEl, gridFiller.cloneNode(), gridFiller.cloneNode());
+
+        taskList.append(listHeader);
+        
 
         for (const task of project.tasks) {
             
@@ -184,7 +196,7 @@ export default class UI {
             newTaskButton.innerHTML = '+'
             newTaskButton.onclick = () => {projectContainer.append(this.loadTaskForm(project))};
 
-        projectContainer.append(projectHeader, priorityEl, dateEl, taskList, newTaskButton);
+        projectContainer.append(projectHeader, taskList, newTaskButton);
 
         this.currentProject = project;
 
@@ -249,13 +261,13 @@ export default class UI {
                 noteContent.innerHTML = note.content;
 
             const editEl = document.createElement('button');
-                editEl.innerHTML = 'Edit';
+                editEl.innerHTML = '✎';
                 editEl.onclick = () => {
                     noteEl.parentElement.replaceChild(this.loadNoteForm(note), noteEl);
                 }
 
             const delEl = document.createElement('button');
-                delEl. innerHTML = 'Delete'
+                delEl. innerHTML = 'x'
                 delEl.onclick = () => {
                     NoteList.remove(note);
                     this.loadNoteList();
@@ -270,43 +282,62 @@ export default class UI {
 
         // Load individual task, with editing functionality
 
-        const taskEl = document.createElement('li');
+        const taskEl = document.createElement('tr');
             taskEl.classList.add('task');
+
+        if (task.complete) {
+            taskEl.classList.add('complete')
+        }
+
+        const checkContainer = document.createElement('td');
 
         const checkEl = document.createElement('input');
             if (task.complete) {
                 checkEl.setAttribute('checked', true);
             }
             checkEl.setAttribute('type', 'checkbox');
-            checkEl.onclick = () => {TodoList.toggleCompletion(task)};
+            checkEl.onclick = () => {
+                TodoList.toggleCompletion(task);
+                taskEl.classList.toggle('complete');
+            };
+        
+        checkContainer.append(checkEl);
 
-        const titleEl = document.createElement('span');
+        const titleEl = document.createElement('td');
             titleEl.innerHTML = task.title;
             titleEl.classList.add('title')
 
-        const dateEl = document.createElement('span');
+        const dateEl = document.createElement('td');
             dateEl.innerHTML = task.dueDate;
             dateEl.classList.add('date')
         
-        const priorityEl = document.createElement('span')
+        const priorityEl = document.createElement('td')
             priorityEl.innerHTML = task.priority;
             priorityEl.classList.add('priority')
+
+        const editContainer = document.createElement('td')
         
         const editEl = document.createElement('button');
-            editEl.innerHTML = 'Edit';
+            editEl.innerHTML = '✎';
             editEl.onclick = () => {
                 taskEl.parentElement.replaceChild(this.loadTaskForm(this.currentProject, task), taskEl);
                 
             }
 
+        editContainer.append(editEl);
+
+        const delContainer = document.createElement('td');
+
         const delEl = document.createElement('button');
-            delEl. innerHTML = 'Delete'
+            delEl. innerHTML = 'x'
             delEl.onclick = () => {
                 todoList.removeTask(task);
                 this.loadContainer('project', this.currentProject);
             }
 
-        taskEl.append(checkEl, titleEl, dateEl, priorityEl, editEl, delEl);
+        editContainer.append(delEl)
+
+        taskEl.append(checkContainer, titleEl, dateEl, priorityEl, editContainer, delContainer);
 
         return taskEl
     }
@@ -375,10 +406,10 @@ export default class UI {
         }
 
         const submitButton = document.createElement('button');
-            submitButton.innerHTML = 'Submit';
+            submitButton.innerHTML = '✓';
 
         const cancelButton = document.createElement('button');
-            cancelButton.innerHTML = 'Cancel';
+            cancelButton.innerHTML = 'x';
             cancelButton.onclick = () => {
                 if (task) {
                     taskForm.parentElement.replaceChild(this.loadTask(task), taskForm);
@@ -428,10 +459,10 @@ export default class UI {
             titleInput.setAttribute('type', 'text');
 
         const submitButton = document.createElement('button');
-            submitButton.innerHTML = 'Submit';
+            submitButton.innerHTML = '✓';
 
         const cancelButton = document.createElement('button');
-            cancelButton.innerHTML = 'Cancel';
+            cancelButton.innerHTML = 'x';
             cancelButton.onclick = () => {this.deleteElement(projectForm)};
 
         if (project){
@@ -488,10 +519,10 @@ export default class UI {
             contentInput.setAttribute('cols', '32');  
 
         const submitButton = document.createElement('button');
-            submitButton.innerHTML = 'Submit';
+            submitButton.innerHTML = '✓';
 
         const cancelButton = document.createElement('button');
-            cancelButton.innerHTML = 'Cancel';
+            cancelButton.innerHTML = 'x';
             cancelButton.onclick = () => {this.deleteElement(noteForm)};
 
         if (note) {

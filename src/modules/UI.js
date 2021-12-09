@@ -528,7 +528,7 @@ export default class UI {
         const cancelButton = document.createElement('button');
             cancelButton.innerHTML = 'x';
             cancelButton.onclick = () => {
-                this.focusNote(noteForm);
+                this.focusForm(noteForm);
                 this.deleteElement(noteForm)
             };
 
@@ -554,18 +554,18 @@ export default class UI {
             }
             
             this.loadContainer('note');
-            this.focusNote(noteForm);
+            this.focusForm(noteForm);
         }
 
-        this.focusNote(noteForm);
+        this.focusForm(noteForm);
 
         return noteForm
     }
 
-    static focusNote(noteEl) {
+    static focusForm(formEl) {
         // TODO note pop out
 
-        noteEl.classList.toggle('focused');
+        formEl.classList.toggle('focused');
         document.querySelector('.noteContainer').classList.toggle('unfocused');
     }
 

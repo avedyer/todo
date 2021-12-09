@@ -130,12 +130,60 @@ table {
 
 }
 
-.noteList {
+.noteContainer {
 
 }
 
-.note {
+.noteSection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    position: relative;
+}
 
+.note {
+    background-color:hsl(0, 0%, 95%);
+    width: 300px;
+    height: 400px;
+    margin: 30px;
+}
+
+.noteContainer .addButton {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 60px;
+    height: 60px;
+}
+
+.pinned:after {
+    content: '';
+    border-bottom: 1px solid grey;
+    position: absolute;
+    bottom: 0;
+    width: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.focused {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.unfocused:after {
+    content: '';
+    width: 100vw;
+    height: 100vh;
+    background-color: hsla(0, 0%, 0%, 20%);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
 }
 
 .hidden {

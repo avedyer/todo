@@ -219,10 +219,10 @@ export default class UI {
         }
 
         const pinnedContainer = document.createElement('div');
-            pinnedContainer.classList.add('pinned');
+            pinnedContainer.classList.add('pinned', 'noteSection');
 
         const unpinnedContainer = document.createElement('div');
-            unpinnedContainer.classList.add('unpinned');
+            unpinnedContainer.classList.add('unpinned', 'noteSection');
 
         for (let note of NoteList.notes) {
             note.pinned ? pinnedContainer.append(this.loadNote(note)) : unpinnedContainer.append(this.loadNote(note));
@@ -230,7 +230,10 @@ export default class UI {
 
         const newNoteButton = document.createElement('button');
             newNoteButton.innerHTML = '+'
-            newNoteButton.onclick = () => {noteContainer.append(this.loadNoteForm())};
+            newNoteButton.classList.add('addButton');
+            newNoteButton.onclick = () => {
+                noteContainer.append(this.loadNoteForm());
+            }
 
         noteContainer.append(pinnedContainer, unpinnedContainer, newNoteButton);
 
@@ -272,6 +275,8 @@ export default class UI {
                     NoteList.remove(note);
                     this.loadNoteList();
             }
+
+        noteEl.onclick = () => this.focusNote(noteEl);
 
         noteEl.append(noteTitle, pinEl, noteContent, editEl, delEl);
 
@@ -335,7 +340,7 @@ export default class UI {
                 this.loadContainer('project', this.currentProject);
             }
 
-        editContainer.append(delEl)
+        editContainer.append(delEl);
 
         taskEl.append(checkContainer, titleEl, dateEl, priorityEl, editContainer, delContainer);
 
@@ -507,7 +512,6 @@ export default class UI {
         else {
             noteForm = document.createElement('form');
             noteForm.setAttribute('onsubmit', 'return false');
-            noteForm.classList.add('noteForm');
         }
         
 
@@ -523,7 +527,10 @@ export default class UI {
 
         const cancelButton = document.createElement('button');
             cancelButton.innerHTML = 'x';
-            cancelButton.onclick = () => {this.deleteElement(noteForm)};
+            cancelButton.onclick = () => {
+                this.focusNote(noteForm);
+                this.deleteElement(noteForm)
+            };
 
         if (note) {
             titleInput.value = note.title;
@@ -547,13 +554,19 @@ export default class UI {
             }
             
             this.loadContainer('note');
+            this.focusNote(noteForm);
         }
+
+        this.focusNote(noteForm);
 
         return noteForm
     }
 
-    static focusNote() {
+    static focusNote(noteEl) {
         // TODO note pop out
+
+        noteEl.classList.toggle('focused');
+        document.querySelector('.noteContainer').classList.toggle('unfocused');
     }
 
     static deleteElement(element) {

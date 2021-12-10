@@ -252,6 +252,7 @@ export default class UI {
             noteTitle.innerHTML = note.title;
 
             const pinEl = document.createElement('div');
+                pinEl.classList.add('pin')
                 note.pinned ? pinEl.innerHTML = 'unpin' : pinEl.innerHTML = 'pin'
                 pinEl.onclick = () => {
                     NoteList.togglePin(note);
@@ -263,18 +264,25 @@ export default class UI {
                 noteContent.classList.add('noteContent');
                 noteContent.innerHTML = note.content;
 
+            const buttonContainer = document.createElement('div');
+                buttonContainer.classList.add('buttonContainer');
+
             const editEl = document.createElement('button');
                 editEl.innerHTML = '✎';
+                editEl.classList.add('edit');
                 editEl.onclick = () => {
                     noteEl.parentElement.replaceChild(this.loadNoteForm(note), noteEl);
                 }
 
             const delEl = document.createElement('button');
                 delEl. innerHTML = 'x'
+                delEl.classList.add('del');
                 delEl.onclick = () => {
                     NoteList.remove(note);
                     this.loadNoteList();
             }
+
+            buttonContainer.append(editEl, delEl);
 
         noteEl.onclick = () => {
             if (!noteEl.classList.contains('unrolled')) {
@@ -289,7 +297,7 @@ export default class UI {
             }
         }
 
-        noteEl.append(noteTitle, pinEl, noteContent, editEl, delEl);
+        noteEl.append(noteTitle, pinEl, noteContent, buttonContainer);
 
         return noteEl
     }

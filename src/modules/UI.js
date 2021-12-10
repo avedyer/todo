@@ -276,7 +276,18 @@ export default class UI {
                     this.loadNoteList();
             }
 
-        noteEl.onclick = () => this.focusNote(noteEl);
+        noteEl.onclick = () => {
+            if (!noteEl.classList.contains('unrolled')) {
+                [].forEach.call(document.querySelectorAll('.note'), (el) => {
+                    el.classList.remove('unrolled')
+                });
+                noteEl.classList.add('unrolled');
+            }
+
+            else {
+                noteEl.classList.remove('unrolled');
+            }
+        }
 
         noteEl.append(noteTitle, pinEl, noteContent, editEl, delEl);
 
@@ -527,10 +538,12 @@ export default class UI {
 
         const cancelButton = document.createElement('button');
             cancelButton.innerHTML = 'x';
+
             cancelButton.onclick = () => {
-                this.focusForm(noteForm);
-                this.deleteElement(noteForm)
-            };
+                if (!note) {
+                    this.deleteElement(noteForm);
+                }
+            }
 
         if (note) {
             titleInput.value = note.title;
@@ -554,21 +567,15 @@ export default class UI {
             }
             
             this.loadContainer('note');
-            this.focusForm(noteForm);
         }
-
-        this.focusForm(noteForm);
 
         return noteForm
     }
 
-    static focusForm(formEl) {
-        // TODO note pop out
+    static editNote (note) {
 
-        formEl.classList.toggle('focused');
-        document.querySelector('.noteContainer').classList.toggle('unfocused');
     }
-
+    
     static deleteElement(element) {
         element.parentElement.removeChild(element);
     }

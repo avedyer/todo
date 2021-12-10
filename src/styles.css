@@ -146,6 +146,14 @@ table {
     width: 300px;
     height: 400px;
     margin: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.unrolled {
+    min-height: 400px;
+    height: auto;
+    text-overflow: clip;
 }
 
 .noteContainer .addButton {

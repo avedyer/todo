@@ -3,6 +3,8 @@ body {
     display: flex;
     flex-wrap: nowrap;
     overflow-x: hidden;
+    background-color: hsl(0, 0%, 90%);
+    display: relative;
 }
 
 button {
@@ -50,15 +52,21 @@ table {
 .sidebar {  
     height: 100vh;
     width: 20%;
-    min-width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
     background-color: hsl(0, 0%, 95%);
+    box-sizing: border-box;
 }
-
+ 
 .listContainer { 
+    min-height: 100vh;
     width: 80%;
-    height: 100vh;
     min-width: 400px;
-    background-color: hsl(0, 0%, 90%);
+    padding: 12px;
+    position: absolute;
+    right: 0;
+    box-sizing: border-box;
 }
 
 .tab {
@@ -147,8 +155,8 @@ table {
     height: 400px;
     margin: 30px;
     overflow: hidden;
-    text-overflow: ellipsis;
     position: relative;
+    padding: 6px 6px 32px 6px;
 }
 
 .note .buttonContainer {
@@ -157,10 +165,15 @@ table {
     right: 0;
     background-color: hsl(0, 0%, 90%);
     padding: 2px;
+    z-index: 2;
 }
 
 .noteTitle {
     width: 80%;
+    height: 60px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     float: left;
     margin-top: 0px;
     margin-bottom: 12px;
@@ -172,12 +185,32 @@ table {
 }
 
 .noteContent {
-    clear:both;
+    clear: both;
 }
+
+.note::after {
+    content: '';
+    width: 100%;
+    height: 20%;
+    display: inline-block;
+    background: linear-gradient(hsla(0, 0%, 0%, 0) 0%, hsla(0, 0%, 95%, 0.8) 50%, hsl(0, 0%, 95%) 100%);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
 .unrolled {
     min-height: 400px;
     height: auto;
     text-overflow: clip;
+}
+
+.unrolled .noteContent {
+    
+}
+
+.unrolled::after{
+    display: none;
 }
 
 .noteContainer .addButton {
@@ -188,7 +221,7 @@ table {
     height: 60px;
 }
 
-.pinned:after {
+.pinned::before {
     content: '';
     border-bottom: 1px solid grey;
     position: absolute;

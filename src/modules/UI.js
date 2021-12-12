@@ -156,10 +156,10 @@ export default class UI {
         const projectHeader = document.createElement('h2');
             projectHeader.innerHTML = project.title;
 
-        const taskList = document.createElement('table')
+        const taskList = document.createElement('ul')
             taskList.classList.add('taskList');
 
-        const priorityEl = document.createElement('td');
+        const priorityEl = document.createElement('div');
             priorityEl.innerHTML = 'Priority';
             priorityEl.classList.add('priority');
 
@@ -168,7 +168,7 @@ export default class UI {
                 this.loadProject(project);
             }
         
-        const dateEl = document.createElement('td');
+        const dateEl = document.createElement('div');
             dateEl.innerHTML = 'Due Date'
             dateEl.classList.add('date');
 
@@ -177,9 +177,9 @@ export default class UI {
                 this.loadProject(project);
             }
 
-        const gridFiller = document.createElement('td');
+        const gridFiller = document.createElement('div');
 
-        const listHeader = document.createElement('tr');
+        const listHeader = document.createElement('li');
             listHeader.classList.add('task')
 
         listHeader.append(gridFiller, gridFiller.cloneNode(), dateEl, priorityEl, gridFiller.cloneNode(), gridFiller.cloneNode());
@@ -194,7 +194,7 @@ export default class UI {
 
         const newTaskButton = document.createElement('button');
             newTaskButton.innerHTML = '+'
-            newTaskButton.onclick = () => {projectContainer.append(this.loadTaskForm(project))};
+            newTaskButton.onclick = () => {taskList.append(this.loadTaskForm(project))};
 
         projectContainer.append(projectHeader, taskList, newTaskButton);
 
@@ -306,14 +306,14 @@ export default class UI {
 
         // Load individual task, with editing functionality
 
-        const taskEl = document.createElement('tr');
+        const taskEl = document.createElement('li');
             taskEl.classList.add('task');
 
         if (task.complete) {
             taskEl.classList.add('complete')
         }
 
-        const checkContainer = document.createElement('td');
+        const checkContainer = document.createElement('div');
 
         const checkEl = document.createElement('input');
             if (task.complete) {
@@ -327,32 +327,33 @@ export default class UI {
         
         checkContainer.append(checkEl);
 
-        const titleEl = document.createElement('td');
+        const titleEl = document.createElement('div');
             titleEl.innerHTML = task.title;
             titleEl.classList.add('title')
 
-        const dateEl = document.createElement('td');
+        const dateEl = document.createElement('div');
             dateEl.innerHTML = task.dueDate;
             dateEl.classList.add('date')
         
-        const priorityEl = document.createElement('td')
+        const priorityEl = document.createElement('div')
             priorityEl.innerHTML = task.priority;
             priorityEl.classList.add('priority')
 
-        const editContainer = document.createElement('td')
+        const editContainer = document.createElement('div')
         
         const editEl = document.createElement('button');
             editEl.innerHTML = '✎';
             editEl.onclick = () => {
-                //taskEl.parentNode.replaceChild(this.loadTaskForm(this.currentProject, task), taskEl);
-                const testEl = document.createElement('h3');
-                testEl.innerHTML = 'test appendix';
-                taskEl.innerHTML = this.loadTaskForm(this.currentProject, task).innerHTML;
+
+                const liContainer = document.createElement('li');
+                liContainer.append(this.loadTaskForm(this.currentProject, task))
+                taskEl.parentNode.replaceChild(liContainer, taskEl);
+                
             }
 
         editContainer.append(editEl);
 
-        const delContainer = document.createElement('td');
+        const delContainer = document.createElement('div');
 
         const delEl = document.createElement('button');
             delEl. innerHTML = 'x'
@@ -382,32 +383,29 @@ export default class UI {
         else {
             taskForm = document.createElement('form');
             taskForm.setAttribute('onsubmit', 'return false');
-            taskForm.classList.add('taskForm');
+            taskForm.classList.add('taskForm', 'task');
         }
+
+        const checkEl = document.createElement('img')
 
         const titleInput = document.createElement('input')
             titleInput.setAttribute('type', 'text');
             titleInput.setAttribute('placeholder', 'Title');
             titleInput.setAttribute('required', true);
 
-        const dateLabel = document.createElement('label');
-            dateLabel.setAttribute('for', 'dueDate');
-            dateLabel.innerHTML = 'Due Date'
-
         const dateInput = document.createElement('input');
             dateInput.setAttribute('type', 'date');
             dateInput.setAttribute('name', 'dueDate');
 
-        if (task) {
-            titleInput.value = task.title;
-            dateInput.value = task.dueDate;
-        }
-
-        taskForm.append(titleInput, dateLabel, dateInput);
-
+            if (task) {
+                titleInput.value = task.title;
+                dateInput.value = task.dueDate;
+            }
+    
         // Iterative creation of radio button selectors for priority. Defaults to medium, or preexisting task value.
 
         const prioritySelector = document.createElement('div');
+            prioritySelector.classList.add('prioritySelector')
         const priorityVals = ['Low', 'Medium', 'High'];
 
         for (let i=0; i<priorityVals.length; ++i) {
@@ -445,11 +443,29 @@ export default class UI {
                 }
             };
 
-        taskForm.append(titleInput, dateLabel, dateInput, prioritySelector, submitButton, cancelButton);
+        const buttonContainer = document.createElement('div');
+            buttonContainer.append(submitButton, cancelButton);
 
-        taskForm.onsubmit = () => {
+        taskForm.append(
+            checkEl,
+            titleInput, 
+            dateInput,
+            prioritySelector, 
+            buttonContainer
+            );
+
+        submitButton.onclick = () => {
             
             let newTask = new Task(titleInput.value, dateInput.value, document.querySelector('input[name="priority"]:checked').value);
+
+
+            if (!titleInput.value) {
+                return
+            }
+
+            if(!dateInput.value) {
+                return
+            }
 
             if (task) {
                 newTask.id = task.id;

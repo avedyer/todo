@@ -22,11 +22,11 @@ ul {
     padding: 0;
 }
 
-table > tr:nth-of-type(odd) {
+ul > li:nth-of-type(odd) {
     background-color: hsl(0, 0%, 95%);
 }
 
-table > tr:nth-of-type(even) {
+ul > li:nth-of-type(even) {
     background-color: hsl(0, 0%, 90%);
 }
 
@@ -113,8 +113,24 @@ table {
 
 
 .task {
-    grid-template-columns: auto 3fr 1fr 1fr auto auto;
+    display: grid;
+    grid-template-columns: 50px 3fr 1fr 1fr 100px;
     height: 2em;
+}
+
+.taskForm {
+    overflow-y:visible;
+}
+
+.taskForm input {
+    margin: 4px 8px;
+}
+.task input[type=text] {
+    height: 1.6em;
+}
+
+.task input[type=date] {
+    height: 1.6em;
 }
 
 .task.complete {
@@ -130,11 +146,12 @@ table {
     float: right;
 }
 
-.project {
-
+.prioritySelector {
+    display: grid;
+    grid-template-columns: auto auto;
 }
 
-.task {
+.project {
 
 }
 

@@ -127,7 +127,7 @@ table {
 }
 
 .task button {
-
+    float: right;
 }
 
 .project {

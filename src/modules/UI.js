@@ -344,8 +344,10 @@ export default class UI {
         const editEl = document.createElement('button');
             editEl.innerHTML = '✎';
             editEl.onclick = () => {
-                taskEl.parentElement.replaceChild(this.loadTaskForm(this.currentProject, task), taskEl);
-                
+                //taskEl.parentNode.replaceChild(this.loadTaskForm(this.currentProject, task), taskEl);
+                const testEl = document.createElement('h3');
+                testEl.innerHTML = 'test appendix';
+                taskEl.innerHTML = this.loadTaskForm(this.currentProject, task).innerHTML;
             }
 
         editContainer.append(editEl);
@@ -445,8 +447,8 @@ export default class UI {
 
         taskForm.append(titleInput, dateLabel, dateInput, prioritySelector, submitButton, cancelButton);
 
-        taskForm.onsubmit = () => {   
-
+        taskForm.onsubmit = () => {
+            
             let newTask = new Task(titleInput.value, dateInput.value, document.querySelector('input[name="priority"]:checked').value);
 
             if (task) {

@@ -3,8 +3,8 @@ import {populateStorage} from './helpers.js';
 
 class NoteList {
     constructor() {
-        this.notes = []
-    }
+        this.notes = [];
+    };
 
     add(note) {
         this.notes.push(note);
@@ -37,6 +37,10 @@ class NoteList {
 
     getIds() {
         let ids = []
+
+        if (!this.notes) {
+            return ids
+        }
 
         for (const note of this.notes) {
             ids.push(note.id);

@@ -115,14 +115,15 @@ table {
 .task {
     display: grid;
     grid-template-columns: 50px 3fr 1fr 1fr 100px;
-    height: 2em;
+    min-height: 2em;
+    height: auto;
 }
 
 .taskForm {
     overflow-y:visible;
 }
 
-.taskForm input {
+.task input {
     margin: 4px 8px;
 }
 .task input[type=text] {
@@ -164,6 +165,7 @@ table {
     flex-wrap: wrap;
     justify-content: flex-start;
     position: relative;
+    min-height: 500px;
 }
 
 .note {

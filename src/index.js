@@ -34,13 +34,22 @@ NoteList.add(new Note('movies', 'Death of Stalin, Interstellar, Alien'))
 
 if(!localStorage.getItem('todoList')){
     console.log("local storage empty");
+
     populateStorage('todoList', TodoList.projects);
     populateStorage('noteList', NoteList.notes);
 }
 
 else{
-    TodoList.projects = JSON.parse(localStorage.getItem('todoList'));
-    NoteList.notes = JSON.parse(localStorage.getItem('noteList'));
+    TodoList.projects = JSON.parse(localStorage.getItem('todoList')) ? JSON.parse(localStorage.getItem('todoList')) : [];
+    NoteList.notes = JSON.parse(localStorage.getItem('noteList')) ? JSON.parse(localStorage.getItem('noteList')) : [];
+}
+
+if (!TodoList.projects[0]) {
+    console.log(TodoList.projects[0])
+    console.log('initializing default project')
+    const defaultProject = new Project('Home')
+    TodoList.addProject(defaultProject);
+    console.log(TodoList.projects[0])
 }
 
 UI.loadUI();

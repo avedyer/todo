@@ -1,20 +1,19 @@
 import Task from './task.js';
 import Project from './project.js';
 import Note from './note.js'
-import TodoList from './todoList.js';
 import NoteList from './noteList.js';
-import {populateStorage} from './helpers.js';
-import todoList from './todoList.js';
-import dateFormat, { masks } from "dateformat";
+import TodoList from './todoList.js';
 
 export default class UI {
 
-    static currentProject = todoList.projects[0];
-    static body = document.querySelector('body')
+    static currentProject = TodoList.projects[0];
+    static body = document.querySelector('body');
 
     // Initial Loadout
 
     static loadUI () {
+        console.log(this.currentProject)
+        console.log(TodoList.projects[0]);
         this.body.append(this.loadSidebar(), this.loadContainer('project', TodoList.projects[0]));
     }
 
@@ -68,31 +67,38 @@ export default class UI {
 
         // List project names for view selection
 
-        for (const project of TodoList.projects) {
-            const projectEl = document.createElement('li');
+        if (TodoList.projects) {
             
-            const projectTitle = document.createElement('span');
-                projectTitle.innerHTML = project.title;
-                projectTitle.onclick = () => {
-                    this.loadContainer('project', project);
-                }
+        }
 
-            const editEl = document.createElement('button');
-                editEl.innerHTML = '✎';
-                editEl.onclick = () => {
-                    projectEl.parentElement.replaceChild(this.loadProjectForm(project), projectEl);
-                }
-
-            const delEl = document.createElement('button');
-                delEl. innerHTML = 'x'
-                delEl.onclick = () => {
-                    TodoList.removeProject(project);
-                    this.loadSidebar();
-                }
-
-            projectEl.append(projectTitle, editEl, delEl);
-            
-            projectList.append(projectEl);
+        if (TodoList.projects) {
+            for (const project of TodoList.projects) {
+                const projectEl = document.createElement('li');
+                
+                const projectTitle = document.createElement('span');
+                    projectTitle.innerHTML = project.title;
+                    projectTitle.onclick = () => {
+                        this.loadContainer('project', project);
+                    }
+    
+                const editEl = document.createElement('button');
+                    editEl.innerHTML = '✎';
+                    editEl.onclick = () => {
+                        projectEl.parentElement.replaceChild(this.loadProjectForm(project), projectEl);
+                    }
+    
+                const delEl = document.createElement('button');
+                    delEl. innerHTML = 'x'
+                    delEl.onclick = () => {
+                        TodoList.removeProject(project);
+                        this.loadSidebar();
+                        this.loadContainer('project', TodoList.projects[0]);
+                    }
+    
+                projectEl.append(projectTitle, editEl, delEl);
+                
+                projectList.append(projectEl);
+            }
         }
 
         const addProjectButton = document.createElement('button');
@@ -138,10 +144,6 @@ export default class UI {
 
         // Load project container with editing, deleting, sorting functionality
 
-        if (!project) {
-            let project = this.currentProject;
-        }
-
         let projectContainer = document.querySelector('.projectContainer');
         
         if (!projectContainer) {
@@ -151,6 +153,10 @@ export default class UI {
 
         else {
             projectContainer.innerHTML = '';
+        }
+
+        if (!project) {
+            let project = this.currentProject;
         }
 
         const projectHeader = document.createElement('h2');
@@ -194,7 +200,11 @@ export default class UI {
 
         const newTaskButton = document.createElement('button');
             newTaskButton.innerHTML = '+'
-            newTaskButton.onclick = () => {taskList.append(this.loadTaskForm(project))};
+            newTaskButton.onclick = () => {
+                const liContainer = document.createElement('li');
+                liContainer.append(this.loadTaskForm(project))
+                taskList.append(liContainer);
+            };
 
         projectContainer.append(projectHeader, taskList, newTaskButton);
 
@@ -224,15 +234,17 @@ export default class UI {
         const unpinnedContainer = document.createElement('div');
             unpinnedContainer.classList.add('unpinned', 'noteSection');
 
-        for (let note of NoteList.notes) {
-            note.pinned ? pinnedContainer.append(this.loadNote(note)) : unpinnedContainer.append(this.loadNote(note));
+        if (NoteList.notes) {
+            for (let note of NoteList.notes) {
+                note.pinned ? pinnedContainer.append(this.loadNote(note)) : unpinnedContainer.append(this.loadNote(note));
+            }
         }
 
         const newNoteButton = document.createElement('button');
             newNoteButton.innerHTML = '+'
             newNoteButton.classList.add('addButton');
             newNoteButton.onclick = () => {
-                noteContainer.append(this.loadNoteForm());
+                noteContainer.childNodes[0].prepend(this.loadNoteForm());
             }
 
         noteContainer.append(pinnedContainer, unpinnedContainer, newNoteButton);
@@ -347,6 +359,7 @@ export default class UI {
 
                 const liContainer = document.createElement('li');
                 liContainer.append(this.loadTaskForm(this.currentProject, task))
+                console.log(this.currentProject);
                 taskEl.parentNode.replaceChild(liContainer, taskEl);
                 
             }
@@ -358,7 +371,7 @@ export default class UI {
         const delEl = document.createElement('button');
             delEl. innerHTML = 'x'
             delEl.onclick = () => {
-                todoList.removeTask(task);
+                TodoList.removeTask(task);
                 this.loadContainer('project', this.currentProject);
             }
 
@@ -499,6 +512,7 @@ export default class UI {
 
         const titleInput = document.createElement('input');
             titleInput.setAttribute('type', 'text');
+            titleInput.setAttribute('required', true)
 
         const submitButton = document.createElement('button');
             submitButton.innerHTML = '✓';
@@ -549,6 +563,9 @@ export default class UI {
         else {
             noteForm = document.createElement('form');
             noteForm.setAttribute('onsubmit', 'return false');
+            noteForm.classList.add('note');
+            noteForm.classList.add('noteForm');
+            noteForm.classList.add('unrolled');
         }
         
 
@@ -556,7 +573,7 @@ export default class UI {
             titleInput.setAttribute('type', 'text');
 
         const contentInput = document.createElement('textarea');
-            contentInput.setAttribute('rows', '8');
+            contentInput.setAttribute('rows', '32');
             contentInput.setAttribute('cols', '32');  
 
         const submitButton = document.createElement('button');
@@ -579,7 +596,8 @@ export default class UI {
         noteForm.append(titleInput, contentInput, submitButton, cancelButton);
 
         noteForm.onsubmit = () => {
-            let newNote = new Note (titleInput.value, contentInput.value);
+
+            let newNote = new Note(titleInput.value, contentInput.value);
 
             if (note) {
                 newNote.id = note.id;
@@ -593,6 +611,8 @@ export default class UI {
             }
             
             this.loadContainer('note');
+
+            return false
         }
 
         return noteForm

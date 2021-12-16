@@ -3,7 +3,7 @@ import {populateStorage} from './helpers.js';
 
 class TodoList {
     constructor () {
-        this.projects = []
+        this.projects = [];
 
         //this.projects.push(new Project('Home', '09/14/22'));    
         //new Project('Today', helpers.date.today())
